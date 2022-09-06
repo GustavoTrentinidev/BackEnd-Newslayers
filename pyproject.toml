@@ -2,11 +2,11 @@
 name = "backend-newslayers"
 version = "0.1.0"
 description = ""
-authors = ["Gustavo Henrique Trentini <gustavotrentini22@gmail.com>"]
+authors = ["Gustavo Trentini <gustavotrentini22@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-Django = "^4.1"
+python = "^3.8"
+Django = "^4.1.1"
 
 [tool.poetry.dev-dependencies]
 
