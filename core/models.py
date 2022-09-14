@@ -6,6 +6,11 @@ from django.contrib.auth.models import AbstractUser
 class Usuario(AbstractUser):
     seguidores = models.ManyToManyField('self', symmetrical=False, related_name='seguindo')
 
+class Midia_user(models.Model):
+    midiabannerpath = models.CharField(max_length=5000)
+    midiaprofilepath = models.CharField(max_length=5000)
+    user_iduser = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name="midia")
+    
 # class Seguir(models.Model):
 #     def __str__(self):
 #         return (self.usuarioSeguidor.nome + ' seguindo ' + self.usuarioSeguido.nome)
@@ -27,6 +32,10 @@ class Noticia(models.Model):
     noticiadatacadastro = models.DateField(default=datetime.now)
     user_iduser = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name="noticias")
     topico_idtopico = models.ForeignKey(Topico, on_delete=models.PROTECT, related_name="noticias")
+
+class Midia(models.Model):
+    midiapath = models.CharField(max_length=5000)
+    noticia_idnoticia = models.ForeignKey(Noticia, on_delete=models.PROTECT, related_name="midia")
 
 class Comentario(models.Model):
     def __str__(self):
