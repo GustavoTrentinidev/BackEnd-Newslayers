@@ -1,8 +1,15 @@
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
-from core.models import Usuario, Topico, Curtida
+from core.models import Usuario, Topico, Curtida, Midia_user
 
+
+class MidiaUserSerializer(ModelSerializer):
+    class Meta:
+        model = Midia_user
+        fields = "__all__"
 
 class UsuarioSerializer(ModelSerializer):
+    midia = MidiaUserSerializer()
+
     class Meta: 
         model = Usuario
         fields = "__all__"
@@ -23,13 +30,21 @@ class UsuarioSerializer(ModelSerializer):
             nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username})
         return nomes_seguidos
 
-    midia = SerializerMethodField()
-    def get_midia(self, instance):
-        banner_e_profile = []
-        midia = instance.midia.get_queryset()
-        for img in midia:
-            banner_e_profile.append({"midiabannerpath": img.midiabannerpath, "midiaprofilepath": img.midiaprofilepath})
-        return banner_e_profile
+    # def get_midia(self, instance):
+    #     banner_e_profile = []
+    #     midia = instance.midia.get_queryset()
+    #     for img in midia:
+    #         banner_e_profile.append({"midiabannerpath": img.midiabannerpath, "midiaprofilepath": img.midiaprofilepath})
+    #     return banner_e_profile
+
+    def create(self, validated_data):
+        fotos = validated_data.pop("midia")
+        user_iduser  = Usuario.objects.create(**validated_data)
+        Midia_user.objects.create(**fotos[0], user_iduser=user_iduser)
+
+        user_iduser.save()
+
+
 
 class TopicoSerializer(ModelSerializer):
     class Meta:
