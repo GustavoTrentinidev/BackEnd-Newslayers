@@ -5,7 +5,7 @@ from core.models import Usuario, Topico, Curtida, Midia_user
 class MidiaUserSerializer(ModelSerializer):
     class Meta:
         model = Midia_user
-        fields = "__all__"
+        fields = ("midiabannerpath", "midiaprofilepath")
 
 class UsuarioSerializer(ModelSerializer):
     midia = MidiaUserSerializer()
@@ -30,19 +30,12 @@ class UsuarioSerializer(ModelSerializer):
             nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username})
         return nomes_seguidos
 
-    # def get_midia(self, instance):
-    #     banner_e_profile = []
-    #     midia = instance.midia.get_queryset()
-    #     for img in midia:
-    #         banner_e_profile.append({"midiabannerpath": img.midiabannerpath, "midiaprofilepath": img.midiaprofilepath})
-    #     return banner_e_profile
-
     def create(self, validated_data):
         fotos = validated_data.pop("midia")
-        user_iduser  = Usuario.objects.create(**validated_data)
-        Midia_user.objects.create(**fotos[0], user_iduser=user_iduser)
+        usuario  = Usuario.objects.create(**validated_data)
+        Midia_user.objects.create(**fotos, user_iduser=usuario)
 
-        user_iduser.save()
+        return usuario
 
 
 
