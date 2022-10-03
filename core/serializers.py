@@ -12,9 +12,15 @@ class MidiaNoticiaSerializer(ModelSerializer):
         model = Midia
         fields = ("midiapath",)
 
+class UsuarioNoticiasSerializer(ModelSerializer):
+    midia = MidiaNoticiaSerializer(many=True)
+    class Meta:
+        model = Noticia
+        fields = ("midia","noticiatitulo","texto","noticiadatacadastro")
+
 class UsuarioSerializer(ModelSerializer):
     midia = MidiaUserSerializer()
-
+    noticias = UsuarioNoticiasSerializer(many=True)
     class Meta: 
         model = Usuario
         fields = "__all__"
