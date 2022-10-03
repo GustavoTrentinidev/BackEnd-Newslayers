@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
-from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia
+from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 
 
 class MidiaUserSerializer(ModelSerializer):
@@ -51,9 +51,24 @@ class CurtidaSerializer(ModelSerializer):
         model = Curtida
         fields = "__all__"
 
+class UsuarioNaNoticia(ModelSerializer):
+    midia = MidiaUserSerializer()
+    class Meta:
+        model = Usuario
+        fields = ("username", "id" , "midia")
+
+class ComentarioSerializer(ModelSerializer):
+    user_iduser = UsuarioNaNoticia()
+    class Meta:
+        model = Comentario
+        fields = ("datacomentario","textocomentario", "user_iduser")
+
 class NoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
-    user_iduser = UsuarioSerializer()
+    user_iduser = UsuarioNaNoticia()
+    topico_idtopico = TopicoSerializer()
+    comentarios = ComentarioSerializer(many=True)
+    curtidas = CurtidaSerializer(many=True)
     class Meta:
         model = Noticia
         fields = "__all__"
@@ -64,3 +79,8 @@ class NoticiaSerializer(ModelSerializer):
         for foto in fotos:
             Midia.objects.create(**foto, noticia_idnoticia=noticia)
         return noticia
+    
+    # def update(self,instance,validated_data):
+    #     instance.comentarios = validated_data.get('comentarios', instance.comentarios)
+    #     instance.curtidas = validated_data.get('curtidas',instance.curtidas)
+    #     return instance
