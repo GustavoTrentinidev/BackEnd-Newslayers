@@ -1,11 +1,16 @@
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
-from core.models import Usuario, Topico, Curtida, Midia_user
+from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia
 
 
 class MidiaUserSerializer(ModelSerializer):
     class Meta:
         model = Midia_user
         fields = ("midiabannerpath", "midiaprofilepath")
+
+class MidiaNoticiaSerializer(ModelSerializer):
+    class Meta: 
+        model = Midia
+        fields = ("midiapath",)
 
 class UsuarioSerializer(ModelSerializer):
     midia = MidiaUserSerializer()
@@ -34,10 +39,7 @@ class UsuarioSerializer(ModelSerializer):
         fotos = validated_data.pop("midia")
         usuario  = Usuario.objects.create(**validated_data)
         Midia_user.objects.create(**fotos, user_iduser=usuario)
-
         return usuario
-
-
 
 class TopicoSerializer(ModelSerializer):
     class Meta:
@@ -48,3 +50,17 @@ class CurtidaSerializer(ModelSerializer):
     class Meta:
         model = Curtida
         fields = "__all__"
+
+class NoticiaSerializer(ModelSerializer):
+    midia = MidiaNoticiaSerializer(many=True)
+    user_iduser = UsuarioSerializer()
+    class Meta:
+        model = Noticia
+        fields = "__all__"
+    
+    def create(self, validated_data):
+        fotos = validated_data.pop("midia")
+        noticia = Noticia.objects.create(**validated_data)
+        for foto in fotos:
+            Midia.objects.create(**foto, noticia_idnoticia=noticia)
+        return noticia
