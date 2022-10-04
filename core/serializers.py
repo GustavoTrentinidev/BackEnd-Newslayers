@@ -2,6 +2,16 @@ from rest_framework.serializers import ModelSerializer, CharField, SerializerMet
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 
 
+class CurtidaSerializer(ModelSerializer):
+    class Meta:
+        model = Curtida
+        fields = "__all__"
+
+class CurtidaUsuarioSerializer(ModelSerializer):
+    class Meta:
+        model = Curtida
+        fields = ("idnoticia",)
+
 class MidiaUserSerializer(ModelSerializer):
     class Meta:
         model = Midia_user
@@ -20,6 +30,7 @@ class UsuarioNoticiasSerializer(ModelSerializer):
 
 class UsuarioSerializer(ModelSerializer):
     midia = MidiaUserSerializer()
+    curtidas = CurtidaUsuarioSerializer(many=True)
     noticias = UsuarioNoticiasSerializer(many=True)
     class Meta: 
         model = Usuario
@@ -50,11 +61,6 @@ class UsuarioSerializer(ModelSerializer):
 class TopicoSerializer(ModelSerializer):
     class Meta:
         model = Topico
-        fields = "__all__"
-
-class CurtidaSerializer(ModelSerializer):
-    class Meta:
-        model = Curtida
         fields = "__all__"
 
 class UsuarioNaNoticia(ModelSerializer):
