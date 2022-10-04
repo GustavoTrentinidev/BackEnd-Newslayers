@@ -85,14 +85,23 @@ class NoticiaSerializer(ModelSerializer):
         model = Noticia
         fields = "__all__"
     
+    
+    
+class CriarEditarNoticiaSerializer(ModelSerializer):
+    midia = MidiaNoticiaSerializer(many=True)
+    class Meta:
+        model = Noticia
+        fields = (
+            "user_iduser",
+            "topico_idtopico",
+            "midia",
+            "noticiatitulo",
+            "texto"
+        )
+        
     def create(self, validated_data):
         fotos = validated_data.pop("midia")
         noticia = Noticia.objects.create(**validated_data)
         for foto in fotos:
             Midia.objects.create(**foto, noticia_idnoticia=noticia)
         return noticia
-    
-    # def update(self,instance,validated_data):
-    #     instance.comentarios = validated_data.get('comentarios', instance.comentarios)
-    #     instance.curtidas = validated_data.get('curtidas',instance.curtidas)
-    #     return instance
