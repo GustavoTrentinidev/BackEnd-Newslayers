@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from core.models import Usuario, Topico, Curtida, Noticia
-from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarEditarNoticiaSerializer
+from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer
 
 
 class UsuarioViewSet(ModelViewSet):
@@ -17,4 +17,6 @@ class NoticiaViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list" or self.action == "retrieve":
             return NoticiaSerializer
-        return CriarEditarNoticiaSerializer
+        elif self.action == "update":
+            return AtualizarNoticiaSerializer
+        return CriarNoticiaSerializer

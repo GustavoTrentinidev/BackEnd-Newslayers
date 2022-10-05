@@ -2,10 +2,10 @@ from rest_framework.serializers import ModelSerializer, CharField, SerializerMet
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 
 
-class CurtidaSerializer(ModelSerializer):
+class CurtidaNoticiaSerializer(ModelSerializer):
     class Meta:
         model = Curtida
-        fields = "__all__"
+        fields = ("iduser",)
 
 class CurtidaUsuarioSerializer(ModelSerializer):
     class Meta:
@@ -70,24 +70,23 @@ class UsuarioNaNoticia(ModelSerializer):
         fields = ("username", "id" , "midia")
 
 class ComentarioSerializer(ModelSerializer):
-    user_iduser = UsuarioNaNoticia()
     class Meta:
         model = Comentario
-        fields = ("datacomentario","textocomentario", "user_iduser")
+        fields = ("id","datacomentario","textocomentario", "user_iduser")
 
 class NoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
     user_iduser = UsuarioNaNoticia()
     topico_idtopico = TopicoSerializer()
     comentarios = ComentarioSerializer(many=True)
-    curtidas = CurtidaSerializer(many=True)
+    curtidas = CurtidaNoticiaSerializer(many=True)
     class Meta:
         model = Noticia
         fields = "__all__"
     
     
     
-class CriarEditarNoticiaSerializer(ModelSerializer):
+class CriarNoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
     class Meta:
         model = Noticia
@@ -98,10 +97,28 @@ class CriarEditarNoticiaSerializer(ModelSerializer):
             "noticiatitulo",
             "texto"
         )
-        
+
     def create(self, validated_data):
         fotos = validated_data.pop("midia")
         noticia = Noticia.objects.create(**validated_data)
         for foto in fotos:
             Midia.objects.create(**foto, noticia_idnoticia=noticia)
         return noticia
+
+class AtualizarNoticiaSerializer(ModelSerializer):
+    curtidas = CurtidaNoticiaSerializer(many=True)
+    comentarios = ComentarioSerializer(many=True)
+    class Meta:
+        model = Noticia
+        fields = ("comentarios", "curtidas", "texto", "noticiatitulo")
+
+    def update(self, instance, validated_data):
+        curtidas = validated_data.pop("curtidas")
+        comentarios = validated_data.pop("comentarios")
+        if comentarios:
+            instance.comentaios.all().delete()
+            for comentario in comentarios:
+                Comentario.objects.create(noticia_idnoticia=instance,**comentario)
+            instance.save()
+        return instance
+    
