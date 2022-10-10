@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from core.models import Usuario, Topico, Noticia, Comentario, Curtida
-from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer, ComentarSerializer, CurtirSerlializer
+from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer, ComentarSerializer, CurtirSerilializer
 
 
 class UsuarioViewSet(ModelViewSet):
@@ -25,4 +25,4 @@ class ComentarioViewSet(ModelViewSet):
 
 class CurtidaViewSet(ModelViewSet):
     queryset = Curtida.objects.all()
-    serializer_class = CurtirSerlializer
+    serializer_class = CurtirSerilializer

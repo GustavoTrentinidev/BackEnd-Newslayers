@@ -1,13 +1,15 @@
-from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 
 
-class CurtirSerlializer(ModelSerializer):
+class CurtirSerilializer(ModelSerializer):
+    iduser = HiddenField(default=CurrentUserDefault()) 
     class Meta:
         model = Curtida
         fields = "__all__"
 
 class ComentarSerializer(ModelSerializer):
+    user_iduser = HiddenField(default=CurrentUserDefault()) 
     class Meta:
         model = Comentario
         fields = "__all__"
@@ -86,7 +88,9 @@ class ComentarioNoticiaSerializer(ModelSerializer):
 
 class NoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
+
     user_iduser = UsuarioNaNoticia()
+    
     topico_idtopico = TopicoSerializer()
     comentarios = ComentarioNoticiaSerializer(many=True)
     curtidas = CurtidaNoticiaSerializer(many=True)
@@ -98,6 +102,7 @@ class NoticiaSerializer(ModelSerializer):
     
 class CriarNoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
+    user_iduser = HiddenField(default=CurrentUserDefault()) 
     class Meta:
         model = Noticia
         fields = (
