@@ -1,3 +1,5 @@
+from pyexpat import model
+from wsgiref.validate import validator
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 
@@ -40,6 +42,21 @@ class UsuarioNoticiasSerializer(ModelSerializer):
         model = Noticia
         fields = ("midia","noticiatitulo","texto","noticiadatacadastro")
 
+class UsuarioPostSerializer(ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ("username", "password", "email",)
+
+    email = CharField(max_length=120, required=True)
+
+    def create(self, validated_data):
+        password = validated_data.pop("password", None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
 class UsuarioSerializer(ModelSerializer):
     midia = MidiaUserSerializer()
     curtidas = CurtidaUsuarioSerializer(many=True)
@@ -64,11 +81,11 @@ class UsuarioSerializer(ModelSerializer):
             nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username})
         return nomes_seguidos
 
-    def create(self, validated_data):
-        fotos = validated_data.pop("midia")
-        usuario  = Usuario.objects.create(**validated_data)
-        Midia_user.objects.create(**fotos, user_iduser=usuario)
-        return usuario
+    # def create(self, validated_data):
+    #     fotos = validated_data.pop("midia")
+    #     usuario  = Usuario.objects.create(**validated_data)
+    #     Midia_user.objects.create(**fotos, user_iduser=usuario)
+    #     return usuario
 
 class TopicoSerializer(ModelSerializer):
     class Meta:
@@ -98,8 +115,6 @@ class NoticiaSerializer(ModelSerializer):
         model = Noticia
         fields = "__all__"
     
-    
-    
 class CriarNoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
     user_iduser = HiddenField(default=CurrentUserDefault()) 
@@ -119,3 +134,7 @@ class CriarNoticiaSerializer(ModelSerializer):
             Midia.objects.create(**foto, noticia_idnoticia=noticia)
         return noticia
     
+class MIDIAUSERPOSTSerializer(ModelSerializer):
+    class Meta:
+        model = Midia_user
+        fields = "__all__"

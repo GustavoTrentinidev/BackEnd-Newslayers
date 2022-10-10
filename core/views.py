@@ -1,11 +1,16 @@
+from core.models.Midia import Midia
+from core.models.Midia_user import Midia_user
 from rest_framework.viewsets import ModelViewSet
-from core.models import Usuario, Topico, Noticia, Comentario, Curtida
-from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer, ComentarSerializer, CurtirSerilializer
+from core.models import Usuario, Topico, Noticia, Comentario, Curtida, Midia
+from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer, ComentarSerializer,UsuarioPostSerializer, CurtirSerilializer, MIDIAUSERPOSTSerializer
 
 
 class UsuarioViewSet(ModelViewSet):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+    def get_serializer_class(self):
+        if self.action == "list" or self.action == "retrieve":
+            return UsuarioSerializer
+        return UsuarioPostSerializer
 
 class TopicoViewSet(ModelViewSet):
     queryset = Topico.objects.all()
@@ -26,3 +31,7 @@ class ComentarioViewSet(ModelViewSet):
 class CurtidaViewSet(ModelViewSet):
     queryset = Curtida.objects.all()
     serializer_class = CurtirSerilializer
+
+class MIDIAUSERViewSet(ModelViewSet):
+    queryset = Midia_user.objects.all()
+    serializer_class = MIDIAUSERPOSTSerializer
