@@ -2,6 +2,7 @@ from pyexpat import model
 from wsgiref.validate import validator
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
+from django.contrib.auth.models import Group
 
 
 class CurtirSerilializer(ModelSerializer):
@@ -45,7 +46,7 @@ class UsuarioNoticiasSerializer(ModelSerializer):
 class UsuarioPostSerializer(ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ("username", "password", "email",)
+        fields = ("id","username", "password", "email",)
 
     email = CharField(max_length=120, required=True)
 
@@ -55,6 +56,7 @@ class UsuarioPostSerializer(ModelSerializer):
         if password is not None:
             instance.set_password(password)
         instance.save()
+        instance.groups.add(Group.objects.get(name="leitor"))
         return instance
 
 class UsuarioSerializer(ModelSerializer):
