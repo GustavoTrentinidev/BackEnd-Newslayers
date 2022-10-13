@@ -90,7 +90,7 @@ DATABASES = {
         'USER': config('PGUSER'),
         'PASSWORD': config('PGPASSWORD'),
         'HOST': config('PGHOST'),
-        'PGPORT': config('PGPORT')
+        'PORT': config('PGPORT')
     }
 }
 
