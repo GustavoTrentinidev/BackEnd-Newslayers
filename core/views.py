@@ -3,14 +3,25 @@ from core.models.Midia_user import Midia_user
 from rest_framework.viewsets import ModelViewSet
 from core.models import Usuario, Topico, Noticia, Comentario, Curtida, Midia
 from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer, ComentarSerializer,UsuarioPostSerializer, CurtirSerilializer, MIDIAUSERPOSTSerializer
+from rest_framework.permissions import AllowAny
 
 
 class UsuarioViewSet(ModelViewSet):
     queryset = Usuario.objects.all()
+    permission_classes_by_action = {'create': [AllowAny]}
     def get_serializer_class(self):
         if self.action == "list" or self.action == "retrieve":
             return UsuarioSerializer
         return UsuarioPostSerializer
+
+    def get_permissions(self):
+        try:
+            # return permission_classes depending on `action` 
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError: 
+            # action is not set return default permission_classes
+            return [permission() for permission in self.permission_classes]
+    
 
 class TopicoViewSet(ModelViewSet):
     queryset = Topico.objects.all()
