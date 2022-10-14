@@ -9,7 +9,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet)
 router.register(r'topicos', TopicoViewSet)
-router.register(r'noticias', NoticiaViewSet)
+router.register(r'noticias', NoticiaViewSet, basename="Noticias")
 router.register(r'comentarios', ComentarioViewSet)
 router.register(r'curtidas', CurtidaViewSet)
 router.register(r'midias-usuarios', MIDIAUSERViewSet)

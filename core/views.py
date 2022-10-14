@@ -17,8 +17,14 @@ class TopicoViewSet(ModelViewSet):
     serializer_class = TopicoSerializer
 
 class NoticiaViewSet(ModelViewSet):
-    queryset = Noticia.objects.all()
-    # serializer_class = NoticiaSerializer
+    def get_queryset(self):
+        queryset = Noticia.objects.all()
+        idtopico = self.request.query_params.get('idtopico') 
+        #Para filtrar pelo id é necessário utilizar um url como: http://127.0.0.1:8000/noticias/?idtopico=3
+        if idtopico is not None:
+            queryset = queryset.filter(topico_idtopico=idtopico)
+        return queryset 
+
     def get_serializer_class(self):
         if self.action == "list" or self.action == "retrieve":
             return NoticiaSerializer
