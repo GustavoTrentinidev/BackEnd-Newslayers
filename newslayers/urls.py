@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from core.views import UsuarioViewSet, TopicoViewSet, NoticiaViewSet, ComentarioViewSet, CurtidaViewSet, MIDIAUSERViewSet
+from core.views import UsuarioViewSet, TopicoViewSet, NoticiaViewSet, ComentarioViewSet, CurtidaViewSet, MIDIAUSERViewSet, UsuarioLogado
 
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView,)
 
@@ -13,6 +13,7 @@ router.register(r'noticias', NoticiaViewSet, basename="Noticias")
 router.register(r'comentarios', ComentarioViewSet)
 router.register(r'curtidas', CurtidaViewSet)
 router.register(r'midias-usuarios', MIDIAUSERViewSet)
+router.register(r'detail', UsuarioLogado, basename="usuariologado")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

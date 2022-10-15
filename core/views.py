@@ -52,3 +52,10 @@ class CurtidaViewSet(ModelViewSet):
 class MIDIAUSERViewSet(ModelViewSet):
     queryset = Midia_user.objects.all()
     serializer_class = MIDIAUSERPOSTSerializer
+
+class UsuarioLogado(ModelViewSet):
+    serializer_class = UsuarioSerializer
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Usuario.objects.filter(id=user.id)
+        return queryset
