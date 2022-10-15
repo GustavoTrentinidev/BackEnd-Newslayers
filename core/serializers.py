@@ -46,7 +46,7 @@ class UsuarioNoticiasSerializer(ModelSerializer):
 class UsuarioPostSerializer(ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ("id","username", "password", "email",)
+        fields = ("username", "password", "email",)
 
     email = CharField(max_length=120, required=True)
 
