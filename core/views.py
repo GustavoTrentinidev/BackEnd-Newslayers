@@ -48,6 +48,12 @@ class ComentarioViewSet(ModelViewSet):
 class CurtidaViewSet(ModelViewSet):
     queryset = Curtida.objects.all()
     serializer_class = CurtirSerilializer
+    def get_queryset(self):
+        queryset = Curtida.objects.all()
+        idnoticia = self.request.query_params.get('idnoticia')
+        if idnoticia is not None:
+            queryset = queryset.filter(idnoticia=idnoticia)
+        return queryset
 
 class MIDIAUSERViewSet(ModelViewSet):
     queryset = Midia_user.objects.all()
