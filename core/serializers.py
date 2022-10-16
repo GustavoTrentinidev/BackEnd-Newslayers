@@ -77,7 +77,7 @@ class UsuarioSerializer(ModelSerializer):
             midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
             midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidor.id)
             midiaprofilepath = "https://newslayersimages.s3.amazonaws.com/"+ midiaprofilepath
-            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia": Midia_user.objects.filter(user_iduser=seguidor.id)})
+            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia":{"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}})
         return nomes_seguidores
     
     seguindo = SerializerMethodField()
