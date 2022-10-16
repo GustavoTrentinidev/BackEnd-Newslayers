@@ -42,7 +42,7 @@ class UsuarioNoticiasSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
     class Meta:
         model = Noticia
-        fields = ("midia","noticiatitulo","texto","noticiadatacadastro")
+        fields = ("id","midia","noticiatitulo","texto","noticiadatacadastro")
 
 class UsuarioPostSerializer(ModelSerializer):
     class Meta:
