@@ -73,13 +73,14 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidores = []
         seguidores = instance.seguidores.get_queryset()
         for seguidor in seguidores:
-            midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidor.id)
-            if midiabannerpath:
+            if Midia_user.objects.get(user_iduser=seguidor.id):
+                midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidor.id)
                 midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
-            midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidor.id)
-            if midiaprofilepath:
+                midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidor.id)
                 midiaprofilepath = "https://newslayersimages.s3.amazonaws.com/"+ midiaprofilepath
-            midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
+                midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
+            else:
+                midia = {}
             nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia":midia})
         return nomes_seguidores
     
@@ -88,13 +89,14 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidos = []
         seguindo = instance.seguindo.get_queryset()
         for seguidos in seguindo:
-            midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidos.id)
-            if midiabannerpath:
+            if Midia_user.objects.get(user_iduser=seguidos.id):
+                midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidos.id)
                 midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
-            midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidos.id)
-            if midiaprofilepath:
+                midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidos.id)
                 midiaprofilepath = "https://newslayersimages.s3.amazonaws.com/"+ midiaprofilepath
-            midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
+                midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
+            else:
+                midia = {}
             nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username, "midia":midia})
         return nomes_seguidos
 
