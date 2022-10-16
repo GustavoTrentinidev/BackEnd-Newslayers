@@ -73,7 +73,7 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidores = []
         seguidores = instance.seguidores.get_queryset()
         for seguidor in seguidores:
-            if Midia_user.objects.get(user_iduser=seguidor.id):
+            if Midia_user.objects.filter(user_iduser=seguidor.id):
                 midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidor.id)
                 midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
                 midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidor.id)
@@ -89,7 +89,7 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidos = []
         seguindo = instance.seguindo.get_queryset()
         for seguidos in seguindo:
-            if Midia_user.objects.get(user_iduser=seguidos.id):
+            if Midia_user.objects.filter(user_iduser=seguidos.id):
                 midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidos.id)
                 midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
                 midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidos.id)
