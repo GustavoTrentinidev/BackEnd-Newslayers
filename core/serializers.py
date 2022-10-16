@@ -3,6 +3,7 @@ from wsgiref.validate import validator
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 from django.contrib.auth.models import Group
+from django.forms.models import model_to_dict
 
 
 class CurtirSerilializer(ModelSerializer):
@@ -72,7 +73,7 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidores = []
         seguidores = instance.seguidores.get_queryset()
         for seguidor in seguidores:
-            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username})
+            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia": Midia_user.objects.filter(user_iduser=seguidor.id)})
         return nomes_seguidores
     
     seguindo = SerializerMethodField()
@@ -80,7 +81,11 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidos = []
         seguindo = instance.seguindo.get_queryset()
         for seguidos in seguindo:
-            nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username})
+            midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidos.id)
+            midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
+            midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidos.id)
+            midiaprofilepath = "https://newslayersimages.s3.amazonaws.com/"+ midiaprofilepath
+            nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username, "midia":{"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath} })
         return nomes_seguidos
 
     # def create(self, validated_data):
