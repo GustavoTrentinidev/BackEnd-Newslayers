@@ -7,7 +7,7 @@ from django.forms.models import model_to_dict
 
 
 class CurtirSerilializer(ModelSerializer):
-    iduser = HiddenField(default=CurrentUserDefault()) 
+    iduser = CharField(default=CurrentUserDefault()) 
     class Meta:
         model = Curtida
         fields = ('id','iduser','idnoticia')
