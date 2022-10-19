@@ -12,12 +12,6 @@ class CurtirSerilializer(ModelSerializer):
         model = Curtida
         fields = ('id','iduser','idnoticia')
 
-class ComentarSerializer(ModelSerializer):
-    user_iduser = CharField(default=CurrentUserDefault()) 
-    class Meta:
-        model = Comentario
-        fields = "__all__"
-
 class CurtidaNoticiaSerializer(ModelSerializer):
     class Meta:
         model = Curtida
@@ -156,4 +150,10 @@ class CriarNoticiaSerializer(ModelSerializer):
 class MIDIAUSERPOSTSerializer(ModelSerializer):
     class Meta:
         model = Midia_user
+        fields = "__all__"
+
+class ComentarSerializer(ModelSerializer):
+    user_iduser = UsuarioNaNoticia(default=CurrentUserDefault()) 
+    class Meta:
+        model = Comentario
         fields = "__all__"
