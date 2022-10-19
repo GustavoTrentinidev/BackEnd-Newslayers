@@ -42,8 +42,13 @@ class NoticiaViewSet(ModelViewSet):
         return CriarNoticiaSerializer
 
 class ComentarioViewSet(ModelViewSet):
-    queryset = Comentario.objects.all()
     serializer_class = ComentarSerializer
+    def get_queryset(self):
+        queryset = Comentario.objects.all()
+        idnoticia = self.request.query_params.get('idnoticia')
+        if idnoticia is not None:
+            queryset = queryset.filter(noticia_idnoticia=idnoticia)
+        return queryset
 
 class CurtidaViewSet(ModelViewSet):
     queryset = Curtida.objects.all()
