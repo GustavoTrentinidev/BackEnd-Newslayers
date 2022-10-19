@@ -13,7 +13,7 @@ class CurtirSerilializer(ModelSerializer):
         fields = ('id','iduser','idnoticia')
 
 class ComentarSerializer(ModelSerializer):
-    user_iduser = HiddenField(default=CurrentUserDefault()) 
+    user_iduser = CharField(default=CurrentUserDefault()) 
     class Meta:
         model = Comentario
         fields = "__all__"
