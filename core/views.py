@@ -1,9 +1,11 @@
+from django.http import HttpResponse
 from core.models.Midia import Midia
 from core.models.Midia_user import Midia_user
 from rest_framework.viewsets import ModelViewSet
 from core.models import Usuario, Topico, Noticia, Comentario, Curtida, Midia
 from core.serializers import UsuarioSerializer, TopicoSerializer, NoticiaSerializer, CriarNoticiaSerializer, ComentarSerializer,UsuarioPostSerializer, CurtirSerilializer, MIDIAUSERPOSTSerializer
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action
 
 
 class UsuarioViewSet(ModelViewSet):
@@ -22,7 +24,18 @@ class UsuarioViewSet(ModelViewSet):
             # action is not set return default permission_classes
             return [permission() for permission in self.permission_classes]
     
-
+    @action(detail=True, methods=['get'])
+    def seguir(self, request, pk):
+        # ​http://localhost:8000/usuarios/17/seguir/ -> segue o usuário 17
+        seguidor = Usuario.objects.get(id=request.user.id)
+        seguido = Usuario.objects.get(id=pk)
+        if not Usuario.objects.get(id=pk).seguidores.contains(seguidor):
+            Usuario.objects.get(id=pk).seguidores.add(seguidor)
+            return HttpResponse(content=f'{seguidor.username} começou a seguir {seguido.username}')
+        else:
+            Usuario.objects.get(id=pk).seguidores.remove(seguidor)
+            return HttpResponse(content=f'{seguidor.username} deixou de seguir {seguido.username}')
+        
 class TopicoViewSet(ModelViewSet):
     queryset = Topico.objects.all()
     serializer_class = TopicoSerializer
