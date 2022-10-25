@@ -147,7 +147,10 @@ class CriarNoticiaSerializer(ModelSerializer):
             Midia.objects.create(**foto, noticia_idnoticia=noticia)
         return noticia
     
+from drf_extra_fields.fields import Base64ImageField
 class MIDIAUSERPOSTSerializer(ModelSerializer):
+    midiabannerpath=Base64ImageField()
+    midiaprofilepath=Base64ImageField()
     class Meta:
         model = Midia_user
         fields = "__all__"
