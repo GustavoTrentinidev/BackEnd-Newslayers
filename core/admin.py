@@ -6,13 +6,8 @@ from core.models import Usuario, Noticia, Topico, Curtida, Comentario, Midia_use
 admin.site.register(Topico)
 admin.site.register(Curtida)
 admin.site.register(Comentario)
-
-class MidiaUserInline(admin.TabularInline):
-    model = Midia_user
-
-@admin.register(Usuario)
-class UsuarioComMidia(admin.ModelAdmin):
-    inlines = (MidiaUserInline,)
+admin.site.register(Midia_user)
+admin.site.register(Usuario)
 
 class MidiaNoticiaInline(admin.TabularInline):
     model = Midia

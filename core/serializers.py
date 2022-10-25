@@ -3,19 +3,14 @@ from wsgiref.validate import validator
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 from django.contrib.auth.models import Group
+from django.forms.models import model_to_dict
 
 
 class CurtirSerilializer(ModelSerializer):
-    iduser = HiddenField(default=CurrentUserDefault()) 
+    iduser = CharField(default=CurrentUserDefault()) 
     class Meta:
         model = Curtida
-        fields = "__all__"
-
-class ComentarSerializer(ModelSerializer):
-    user_iduser = HiddenField(default=CurrentUserDefault()) 
-    class Meta:
-        model = Comentario
-        fields = "__all__"
+        fields = ('id','iduser','idnoticia')
 
 class CurtidaNoticiaSerializer(ModelSerializer):
     class Meta:
@@ -41,12 +36,12 @@ class UsuarioNoticiasSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
     class Meta:
         model = Noticia
-        fields = ("midia","noticiatitulo","texto","noticiadatacadastro")
+        fields = ("id","midia","noticiatitulo","texto","noticiadatacadastro")
 
 class UsuarioPostSerializer(ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ("id","username", "password", "email",)
+        fields = ("username", "password", "email",)
 
     email = CharField(max_length=120, required=True)
 
@@ -72,7 +67,15 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidores = []
         seguidores = instance.seguidores.get_queryset()
         for seguidor in seguidores:
-            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username})
+            if Midia_user.objects.filter(user_iduser=seguidor.id):
+                midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidor.id)
+                midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
+                midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidor.id)
+                midiaprofilepath = "https://newslayersimages.s3.amazonaws.com/"+ midiaprofilepath
+                midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
+            else:
+                midia = {}
+            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia":midia})
         return nomes_seguidores
     
     seguindo = SerializerMethodField()
@@ -80,7 +83,15 @@ class UsuarioSerializer(ModelSerializer):
         nomes_seguidos = []
         seguindo = instance.seguindo.get_queryset()
         for seguidos in seguindo:
-            nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username})
+            if Midia_user.objects.filter(user_iduser=seguidos.id):
+                midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidos.id)
+                midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
+                midiaprofilepath = Midia_user.objects.values_list('midiaprofilepath', flat=True).get(user_iduser=seguidos.id)
+                midiaprofilepath = "https://newslayersimages.s3.amazonaws.com/"+ midiaprofilepath
+                midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
+            else:
+                midia = {}
+            nomes_seguidos.append({"id":seguidos.id ,"username": seguidos.username, "midia":midia})
         return nomes_seguidos
 
     # def create(self, validated_data):
@@ -139,4 +150,10 @@ class CriarNoticiaSerializer(ModelSerializer):
 class MIDIAUSERPOSTSerializer(ModelSerializer):
     class Meta:
         model = Midia_user
+        fields = "__all__"
+
+class ComentarSerializer(ModelSerializer):
+    user_iduser = UsuarioNaNoticia(default=CurrentUserDefault()) 
+    class Meta:
+        model = Comentario
         fields = "__all__"
