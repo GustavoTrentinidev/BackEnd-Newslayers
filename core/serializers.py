@@ -1,9 +1,7 @@
-from pyexpat import model
-from wsgiref.validate import validator
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 from django.contrib.auth.models import Group
-from django.forms.models import model_to_dict
+from drf_extra_fields.fields import Base64ImageField
 
 
 class CurtirSerilializer(ModelSerializer):
@@ -28,6 +26,7 @@ class MidiaUserSerializer(ModelSerializer):
         fields = ("midiabannerpath", "midiaprofilepath")
 
 class MidiaNoticiaSerializer(ModelSerializer):
+    midiapath = Base64ImageField()
     class Meta: 
         model = Midia
         fields = ("midiapath",)
@@ -147,7 +146,6 @@ class CriarNoticiaSerializer(ModelSerializer):
             Midia.objects.create(**foto, noticia_idnoticia=noticia)
         return noticia
     
-from drf_extra_fields.fields import Base64ImageField
 class MIDIAUSERPOSTSerializer(ModelSerializer):
     midiabannerpath=Base64ImageField()
     midiaprofilepath=Base64ImageField()
