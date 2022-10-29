@@ -23,7 +23,7 @@ class CurtidaUsuarioSerializer(ModelSerializer):
 class MidiaUserSerializer(ModelSerializer):
     class Meta:
         model = Midia_user
-        fields = ("midiabannerpath", "midiaprofilepath")
+        fields = ("id","midiabannerpath", "midiaprofilepath")
 
 class MidiaNoticiaSerializer(ModelSerializer):
     midiapath = Base64ImageField()
