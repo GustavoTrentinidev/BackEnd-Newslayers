@@ -10,5 +10,5 @@ class Comentario(models.Model):
         return f'({self.noticia_idnoticia}) {self.user_iduser}: {self.textocomentario}'
     datacomentario = models.DateField(default=date)
     textocomentario = models.CharField(max_length=240)
-    user_iduser = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name="comentarios")
-    noticia_idnoticia = models.ForeignKey(Noticia, on_delete=models.PROTECT, related_name="comentarios")
+    user_iduser = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="comentarios")
+    noticia_idnoticia = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name="comentarios")
