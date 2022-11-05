@@ -133,7 +133,7 @@ class CriarNoticiaSerializer(ModelSerializer):
     class Meta:
         model = Noticia
         fields = (
-            "id"
+            "id",
             "user_iduser",
             "topico_idtopico",
             "midia",
