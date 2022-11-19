@@ -117,9 +117,7 @@ class ComentarioNoticiaSerializer(ModelSerializer):
 
 class NoticiaSerializer(ModelSerializer):
     midia = MidiaNoticiaSerializer(many=True)
-
     user_iduser = UsuarioNaNoticia()
-    
     topico_idtopico = TopicoSerializer()
     comentarios = ComentarioNoticiaSerializer(many=True)
     curtidas = CurtidaNoticiaSerializer(many=True)

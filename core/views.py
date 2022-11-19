@@ -40,7 +40,10 @@ class TopicoViewSet(ModelViewSet):
     queryset = Topico.objects.all()
     serializer_class = TopicoSerializer
 
+from core.paginations import NoticiasPagination
+
 class NoticiaViewSet(ModelViewSet):
+    pagination_class = NoticiasPagination
     def get_queryset(self):
         queryset = Noticia.objects.all()
         idtopico = self.request.query_params.get('idtopico') 
