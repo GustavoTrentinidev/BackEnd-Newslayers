@@ -48,6 +48,8 @@ class UsuarioPostSerializer(ModelSerializer):
         password = validated_data.pop('password', None)
         if password is not None:
             instance.set_password(password)
+        instance.email = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
         instance.save()
         return instance
 
