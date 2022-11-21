@@ -1,3 +1,4 @@
+from tkinter import FLAT
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 from django.contrib.auth.models import Group
@@ -73,8 +74,16 @@ class UsuarioSerializer(ModelSerializer):
     seguidores = SerializerMethodField()
     def get_seguidores(self,instance):
         nomes_seguidores = []
+        qtd_curtidas_seguidor = []
         seguidores = instance.seguidores.get_queryset()
+        noticias_usuario = Noticia.objects.filter(user_iduser=instance.id)
         for seguidor in seguidores:
+            if noticias_usuario:
+                for noticia in noticias_usuario:
+                    for curtida in Curtida.objects.filter(idnoticia=noticia.id).values_list('iduser',flat=True):
+                        if curtida == seguidor.id:
+                            qtd_curtidas_seguidor.append(seguidor.id)
+                            
             if Midia_user.objects.filter(user_iduser=seguidor.id):
                 midiabannerpath = Midia_user.objects.values_list('midiabannerpath', flat=True).get(user_iduser=seguidor.id)
                 midiabannerpath = "https://newslayersimages.s3.amazonaws.com/"+ midiabannerpath
@@ -83,7 +92,8 @@ class UsuarioSerializer(ModelSerializer):
                 midia = {"midiabannerpath": midiabannerpath,"midiaprofilepath": midiaprofilepath}
             else:
                 midia = {}
-            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia":midia})
+            likes = len(qtd_curtidas_seguidor)
+            nomes_seguidores.append({"id": seguidor.id, "username": seguidor.username, "midia":midia, "curtidas": likes})
         return nomes_seguidores
     
     seguindo = SerializerMethodField()
