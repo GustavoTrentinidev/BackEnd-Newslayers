@@ -1,4 +1,3 @@
-from tkinter import FLAT
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, HiddenField, CurrentUserDefault
 from core.models import Usuario, Topico, Curtida, Midia_user, Noticia, Midia, Comentario
 from django.contrib.auth.models import Group
