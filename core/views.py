@@ -57,6 +57,10 @@ class NoticiaViewSet(ModelViewSet):
             return NoticiaSerializer
         return CriarNoticiaSerializer
 
+class TodasNoticiasView(ModelViewSet):
+    queryset = Noticia.objects.all()
+    serializer_class = NoticiaSerializer
+
 class ComentarioViewSet(ModelViewSet):
     serializer_class = ComentarSerializer
     def get_queryset(self):
